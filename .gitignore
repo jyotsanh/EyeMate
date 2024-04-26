@@ -3,6 +3,30 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Node.js dependencies
+/node_modules
+
+# Compiled files
+/build
+/dist
+
+# Environment variables
+.env
+
+# IDE and editor files
+.vscode
+.idea
+
+# Django specific files
+*.pyc
+*.pyo
+__pycache__
+*.sqlite3
+
+# Dependency directories
+venv/
+
+
 # C extensions
 *.so
 

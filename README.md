@@ -1,9 +1,10 @@
 
 # EyeMate
-
-EyeMate is an e-commerce platform dedicated to providing a seamless experience for buying and selling eyeglasses and sunglasses. With features like prescription customization and appointment booking, EyeMate aims to revolutionize the way people shop for eyewear online.
 # 
-<img src="https://user-images.githubusercontent.com/74038190/212750680-266fa8aa-39f1-4e8b-8873-7181dbaf3d7c.gif" alt="Cat GIF" width="500" height="500">
+<img align = "right" src="https://user-images.githubusercontent.com/74038190/212750996-938b257b-266c-45a7-9af7-655341c0f58b.gif" width="500" height="500">
+<p align="left">
+  EyeMate is an e-commerce platform dedicated to providing a seamless experience for buying and selling eyeglasses and sunglasses. With features like prescription customization and appointment booking, EyeMate aims to revolutionize the way people shop for eyewear online.</p>
+
 
 ## Developers
 

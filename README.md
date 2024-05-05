@@ -27,7 +27,7 @@
 1. **Project Inception** ✅
 2. **Requirements Gathering** ✅
 3. **Design Phase** ✅
-4. **Development** pending
+4. **Development** ⌛
 5. Testing
 6. Deployment
 7. Maintenance
@@ -77,3 +77,4 @@ For any questions, issues, or inquiries regarding EyeMate, please contact the ma
 ## Contributing
 
 We welcome contributions from the community to enhance the EyeMate platform. Whether it's fixing bugs, implementing new features, or improving performance, your contributions are valuable. Please feel free to fork the repository, make your changes, and submit a pull request for review.
+<img align = "right" src="https://private-user-images.githubusercontent.com/74038190/240304586-d48893bd-0757-481c-8d7e-ba3e163feae7.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MTQ4ODEyNzQsIm5iZiI6MTcxNDg4MDk3NCwicGF0aCI6Ii83NDAzODE5MC8yNDAzMDQ1ODYtZDQ4ODkzYmQtMDc1Ny00ODFjLThkN2UtYmEzZTE2M2ZlYWU3LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDA1MDUlMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwNTA1VDAzNDkzNFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTYzMzQxY2M0MmRmMWM1YzEwM2UzMGUzZWZiNzY5OTIzMmMxY2JjMDE4MWI2YjQ1ZTJlMjMwOGJmNmU1NzY1MzkmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.G-O0CmeywSVlIDi0rXKie_FCwcucQchRvSVkdqOXUP0" width="1000" height="200">

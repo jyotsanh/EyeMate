@@ -27,7 +27,7 @@
 1. **Project Inception** ✅
 2. **Requirements Gathering** ✅
 3. **Design Phase** ✅
-4. Development
+4. **Development** pending
 5. Testing
 6. Deployment
 7. Maintenance

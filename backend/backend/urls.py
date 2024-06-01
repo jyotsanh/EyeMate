@@ -9,5 +9,6 @@ urlpatterns = [
     path('api/user/',include('api.urls.user_urls')),
     path('api/orders/',include('api.urls.order_urls')),
 ]
-urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
+urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) # for development only
+# still both urlpatterns needs to understand
+urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT) # for development only

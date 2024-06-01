@@ -26,7 +26,7 @@ INSTALLED_APPS = [
     #self-created application 
     'api.apps.ApiConfig', # Using 'api.apps.ApiConfig' in INSTALLED_APPS is more flexible and allows you to customize the app's configuration and behavior.
     # third party application
-    'djangorestframework',
+    'rest_framework',
     'corsheaders', # Including 'corsheaders' in INSTALLED_APPS and configuring it properly is essential for enabling secure cross-origin requests
     'rest_framework_simplejwt.token_blacklist', # black_list refresh_acess_token so,it can't used any more
 ]

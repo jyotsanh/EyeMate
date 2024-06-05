@@ -146,5 +146,6 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True # Doesn't block any request . only used for development. remove if in deployment
+CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'api.User' #override default model 

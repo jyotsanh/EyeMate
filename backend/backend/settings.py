@@ -13,7 +13,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+# Set APPEND_SLASH to False to disable the automatic addition of trailing slashes to URLs. 
+# By default, Django appends a trailing slash to URLs if the URL pattern does not match the request. 
+# This behavior can cause problems, especially when dealing with URLs that end with a slash. 
+# For example, a request for "/api/users/" would be redirected to "/api/users/?next=/api/users/", 
+# which is not the intended behavior. 
+# By setting APPEND_SLASH to False, we disable this automatic behavior and prevent such redirections.
+APPEND_SLASH = False
 # Application definition
 
 INSTALLED_APPS = [

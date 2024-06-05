@@ -1,9 +1,24 @@
-from django.urls import path,include
-from api.views.user_views import RegisterView,LoginView,UserView,LogoutView
+# This file contains the URL mappings for the user views.
+# The URLs defined here are used to map the user views to the corresponding URLs.
 
+# Import the necessary modules
+from django.urls import path, include  # Import the path and include functions from the django.urls module
+
+# Import the user views
+from api.views.user_views import RegisterView, LoginView, UserView, LogoutView  # Import the user views from the api.views.user_views module
+
+# Define the URL patterns
 urlpatterns = [
-    path('register/',RegisterView.as_view()),
-    path('login/',LoginView.as_view()),
-    path('authenticate/',UserView.as_view()),
-    path('logout/',LogoutView.as_view()),
+    # Map the '/register/' URL to the RegisterView
+    path('register/', RegisterView.as_view()),  # Map the URL to the RegisterView.as_view() function
+    
+    # Map the '/login/' URL to the LoginView
+    path('login/', LoginView.as_view()),  # Map the URL to the LoginView.as_view() function
+    
+    # Map the '/authenticate/' URL to the UserView
+    path('authenticate/', UserView.as_view()),  # Map the URL to the UserView.as_view() function
+    
+    # Map the '/logout/' URL to the LogoutView
+    path('logout/', LogoutView.as_view()),  # Map the URL to the LogoutView.as_view() function
 ]
+

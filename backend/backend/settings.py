@@ -143,5 +143,8 @@ STATICFILES_DIRS = [
     BASE_DIR/'static', # Lists additional directories where Django will look for static files.
 ]
 
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True # Doesn't block any request . only used for development. remove if in deployment
+
+AUTH_USER_MODEL = 'api.User' #override default model 

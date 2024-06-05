@@ -1,5 +1,9 @@
 import React from 'react';
-import './Log.css'
+import './Log.css';
+import Apple from '../../assets/apples.svg';  // Correct path to the SVG file
+import password from '../../assets/password.svg'
+import google from '../../assets/google.svg'
+import email from '../../assets/email.svg'
 
 function Log() {
   return (
@@ -9,16 +13,7 @@ function Log() {
           <label>Email</label>
         </div>
         <div className="inputForm">
-          <svg
-            height="20"
-            viewBox="0 0 32 32"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g id="Layer_3" data-name="Layer 3">
-              <path d="..." />
-            </g>
-          </svg>
+          <img src={email} alt="email" />
           <input type="text" className="input" placeholder="Enter your Email" />
         </div>
 
@@ -26,17 +21,10 @@ function Log() {
           <label>Password</label>
         </div>
         <div className="inputForm">
-          <svg
-            height="20"
-            viewBox="-64 0 512 512"
-            width="20"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="..." />
-          </svg>
+        <img src={password} alt="password" /> 
           <input type="password" className="input" placeholder="Enter your Password" />
           <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
-            <path d="..." />
+            <path d="M288 160a64 64 0 1064 64 64.072 64.072 0 00-64-64zm0 104a40 40 0 1140-40 40.045 40.045 0 01-40 40zm192-24c0 48.6-64 128-192 128S96 288.6 96 240s64-128 192-128 192 79.4 192 128zm-32 0c0-36.4-58.6-96-160-96s-160 59.6-160 96 58.6 96 160 96 160-59.6 160-96z" />
           </svg>
         </div>
 
@@ -54,43 +42,11 @@ function Log() {
         <p className="p line">Or With</p>
         <div className="flex-row">
           <button className="btn google">
-            <svg
-              version="1.1"
-              width="20"
-              id="Layer_1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              x="0px"
-              y="0px"
-              viewBox="0 0 512 512"
-              style={{ enableBackground: 'new 0 0 512 512' }}
-              xmlSpace="preserve"
-            >
-              <path d="..." />
-            </svg>
+            <img src={google} alt="Google" />
             Google
           </button>
           <button className="btn apple">
-            <svg
-              version="1.1"
-              height="20"
-              width="20"
-              id="Capa_1"
-              xmlns="http://www.w3.org/2000/svg"
-              xmlnsXlink="http://www.w3.org/1999/xlink"
-              x="0px"
-              y="0px"
-              viewBox="0 0 22.773 22.773"
-              style={{ enableBackground: 'new 0 0 22.773 22.773' }}
-              xmlSpace="preserve"
-            >
-              <g>
-                <g>
-                  <path d="..." />
-                  <path d="..." />
-                </g>
-              </g>
-            </svg>
+            <img src={Apple} alt="Apple" />  {/* Correctly using the imported SVG */}
             Apple
           </button>
         </div>

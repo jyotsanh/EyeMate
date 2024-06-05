@@ -23,7 +23,7 @@ class UserModelAdmin(BaseUserAdmin):
         """
         return self.get_fields(request, obj)
 
-    list_display = ('id', 'username', 'is_admin', 'is_active')
+    list_display = ('id', 'username', 'is_admin', 'is_active','first_name','last_name','email')
     list_filter = ('is_admin',)
     fieldsets = (
         ('User Credentials', {'fields': ('email', 'username', 'password')}),

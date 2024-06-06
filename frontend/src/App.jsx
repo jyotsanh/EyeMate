@@ -8,6 +8,9 @@ import Contactlens from "./pages/contactlens/Contactlens";
 import Book from "./pages/book/Book";
 import FAQ from "./pages/Faq/FAQ";
 import Log from './pages/Login/Log';
+// import Sign from "./pages/Sign/Sign";
+import Sign from './pages/Sign/Sign';
+
 
 function App() {
   return (
@@ -21,6 +24,7 @@ function App() {
         <Route path="/book" element={<Book />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/login" element={<Log />} />
+        <Route path="/sign" element={<Sign />} /> 
       </Routes>
       <Footer />
     </BrowserRouter>

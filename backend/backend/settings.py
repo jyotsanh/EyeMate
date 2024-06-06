@@ -154,4 +154,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = True # Doesn't block any request . only used for development. remove if in deployment
 CORS_ALLOW_CREDENTIALS = True
 
-AUTH_USER_MODEL = 'api.User' #override default model 
+# Set the AUTH_USER_MODEL to use the custom User model defined in the 'api' app.
+# This allows us to use the custom User model instead of the default Django User model.
+# This is useful when you want to customize the user model or add additional fields.
+AUTH_USER_MODEL = 'api.User' 
+
+# Configure the REST framework settings.
+# Set the default renderer class to our custom JSON renderer.
+# This allows us to customize the JSON response format.
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        # Specify the fully qualified class name of the custom JSON renderer.
+        # The custom JSON renderer is defined in the 'api' app.
+        'api.renderers.CustomJSONRenderer',
+    ),
+    # Set the default authentication class to JWTAuthentication.
+    # This authentication class uses JWT (JSON Web Tokens) for authentication.
+    # JWT tokens are used for stateless authentication and provide a secure way to authenticate requests.
+    # The 'rest_framework_simplejwt.authentication.JWTAuthentication' class is used for this purpose.
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+

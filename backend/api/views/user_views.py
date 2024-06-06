@@ -1,100 +1,105 @@
-# This file contains the implementation of the views for user registration, login, user details retrieval, and logout.
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from api.serializers import UserSerializer
+from api.models import User
+from rest_framework.exceptions import AuthenticationFailed
+from django.contrib.auth import authenticate
+from api.renderers import CustomJSONRenderer  # Import your custom renderer
 
-# Import necessary modules
-from rest_framework.views import APIView  # Import the APIView base class from the rest_framework module
-from api.serializers import UserSerializer  # Import the UserSerializer class from the api.serializers module
-from rest_framework.response import Response  # Import the Response class from the rest_framework.response module
-from api.models import User  # Import the User model from the api.models module
-from rest_framework.exceptions import AuthenticationFailed  # Import the AuthenticationFailed exception class
-import jwt  # Import the jwt module
-import datetime  # Import the datetime module
-
-# RegisterView class inherits from the APIView base class and handles the user registration functionality
+# RegisterView: This class handles the registration of a new user by accepting a POST request.
+# It uses the UserSerializer to validate the data and create a new User object.
+# It then generates a refresh token for the user and returns it along with the user details.
 class RegisterView(APIView):
-    def post(self,request):
-        # Serialize the request data using the UserSerializer
+    renderer_classes = [CustomJSONRenderer]  # Use the custom renderer for this view
+
+    def post(self, request):
+        # Deserialize the request data into a UserSerializer object
         serializer = UserSerializer(data=request.data)
-        # Validate the serialized data
+        # Check if the data is valid and raise an exception if not
         serializer.is_valid(raise_exception=True)
-        # Save the validated data to the database
-        serializer.save()
-        # Return the serialized data as the response
-        return Response(serializer.data)
-    
-# LoginView class inherits from the APIView base class and handles the user login functionality
+        # Save the user to the database
+        user = serializer.save()
+
+        # Generate a refresh token for the user
+        refresh = RefreshToken.for_user(user)
+        # Get the access token from the refresh token
+        access_token = refresh.access_token
+
+        # Return the user details, access token, and refresh token as a response
+        return Response({
+            'user': serializer.data,
+            'access': str(access_token),
+            'refresh': str(refresh),
+        })
+
+# Similarly, apply the custom renderer to other views if needed
+
+# LoginView: This class handles the login of a user by accepting a POST request.
+# It authenticates the user using the provided email and password.
+# If the authentication is successful, it generates a refresh token for the user and returns it.
 class LoginView(APIView):
-    def post(self,request):
-        # Extract the email and password from the request data
+    renderer_classes = [CustomJSONRenderer]
+
+    def post(self, request):
+        # Get the email and password from the request data
         email = request.data['email']
         password = request.data['password']
-
-        # Retrieve the user from the database based on the email
-        user = User.objects.filter(email=email).first()
-
-        # If the user is not found, raise an AuthenticationFailed exception
+        # Authenticate the user using the provided credentials
+        user = authenticate(email=email, password=password)
+        
+        # If the user authentication fails, raise an exception
         if user is None:
-            raise AuthenticationFailed('User not found!') 
-        # If the provided password does not match the user's password, raise an AuthenticationFailed exception
-        if not user.check_password(password):
-            raise AuthenticationFailed('Incorrect password!')  
-        
-        # Generate the payload for the JWT token
-        payload = {
-            'id':user.id,
-            'exp':datetime.datetime.utcnow() + datetime.timedelta(minutes=60),  # Set the expiration time of the token
-            'iat':datetime.datetime.utcnow()  # Set the issued at time of the token
-        }
+            raise AuthenticationFailed('Invalid credentials!')
 
-        # Generate the JWT token using the payload and the 'secret' key
-        token = jwt.encode(payload,'secret',algorithm='HS256')
+        # Generate a refresh token for the user
+        refresh = RefreshToken.for_user(user)
+        # Get the access token from the refresh token
+        access_token = refresh.access_token
 
-        # Create a response object
-        response = Response()
-        # Set the 'jwt' cookie in the response with the generated token
-        response.set_cookie(key='jwt',value=token,httponly=True)
-        # Set the data of the response to the generated token
-        response.data = {
-            'jwt':token
-        }
-        
-        # Return the response
-        return response
-    
-# UserView class inherits from the APIView base class and handles the user details retrieval functionality
+        # Return the access token and refresh token as a response
+        return Response({
+            'access': str(access_token),
+            'refresh': str(refresh),
+        })
+
+# UserView: This class handles the retrieval of user details by accepting a GET request.
+# It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
+# It serializes the user object and returns it as a response.
 class UserView(APIView):
-    def get(self,request):
-        # Retrieve the 'jwt' cookie from the request
-        token = request.COOKIES.get('jwt')   
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    renderer_classes = [CustomJSONRenderer]
 
-        # If the token is not present, raise an AuthenticationFailed exception
-        if not token:
-            raise AuthenticationFailed('Unauthenticated!')
-
-        try:
-            # Decode the token using the 'secret' key
-            payload = jwt.decode(token,'secret',algorithms=['HS256'])
-        except jwt.ExpiredSignatureError:
-            # If the token has expired, raise an AuthenticationFailed exception
-            raise AuthenticationFailed('Unauthenticated!')
-
-        # Retrieve the user from the database based on the user id in the payload
-        user = User.objects.filter(id=payload['id']).first()
-        # Serialize the user object using the UserSerializer
+    def get(self, request):
+        # Get the authenticated user from the request
+        user = request.user
+        # Serialize the user object
         serializer = UserSerializer(user)
-
-        # Return the serialized user object as the response
+        # Return the serialized user data as a response
         return Response(serializer.data)
-    
-# LogoutView class inherits from the APIView base class and handles the logout functionality
+
+# LogoutView: This class handles the logout of a user by accepting a POST request.
+# It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
+# It blacklists the provided refresh token, making it unusable.
+# It returns a success message as a response.
 class LogoutView(APIView):
-    def post(self,request):
-        # Create a response object
-        response = Response()
-        # Delete the 'jwt' cookie from the response
-        response.delete_cookie('jwt')
-        # Set the data of the response to a success message
-        response.data = {
-            'message':'success'
-        }
-        # Return the response
-        return response
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    renderer_classes = [CustomJSONRenderer]
+
+    def post(self, request):
+        try:
+            # Get the refresh token from the request data
+            refresh_token = request.data['refresh_token']
+            # Create a RefreshToken object from the refresh token
+            token = RefreshToken(refresh_token)
+            # Blacklist the refresh token, making it unusable
+            token.blacklist()
+            # Return a success message as a response
+            return Response({'message': 'Success'})
+        except Exception as e:
+            # If an exception occurs, return the exception message as a response with a 400 status code
+            return Response({'message': str(e)}, status=400)

@@ -7,6 +7,7 @@ from api.serializers import UserSerializer
 from api.models import User
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import authenticate
+from django.contrib.auth.hashers import make_password
 from api.renderers import CustomJSONRenderer  # Import your custom renderer
 
 # RegisterView: This class handles the registration of a new user by accepting a POST request.
@@ -103,3 +104,45 @@ class LogoutView(APIView):
         except Exception as e:
             # If an exception occurs, return the exception message as a response with a 400 status code
             return Response({'message': str(e)}, status=400)
+
+# DeleteUserView: This class handles the deletion of a user by accepting a DELETE request.
+# It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
+class DeleteUserView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    renderer_classes = [CustomJSONRenderer]
+
+    def delete(self, request):
+        # Get the authenticated user from the request
+        user = request.user
+        
+        # Delete the user from the database
+        user.delete()
+        
+        # Return a success message as a response
+        return Response({'message': 'User deleted successfully'})
+
+# ResetPasswordView: This class handles the reset of a user's password by accepting a POST request.
+# It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
+class ResetPasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication]
+    renderer_classes = [CustomJSONRenderer]
+
+    def post(self, request):
+        # Get the authenticated user from the request
+        user = request.user
+        
+        # Get the new password from the request data
+        new_password = request.data.get('new_password')
+        
+        # If no new password is provided, return an error response
+        if not new_password:
+            return Response({'message': 'New password not provided'}, status=400)
+        
+        # Set the new password for the user
+        user.password = make_password(new_password)
+        user.save()
+        
+        # Return a success message as a response
+        return Response({'message': 'Password reset successfully'})

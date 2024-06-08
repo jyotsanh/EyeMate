@@ -3,8 +3,9 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from api.serializers import UserSerializer
+from api.serializers import UserSerializer,UserRegistrationSerializer,UserLoginSerializer,UserProfileSerializer
 from api.models import User
+from rest_framework import status
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
@@ -13,28 +14,33 @@ from api.renderers import CustomJSONRenderer  # Import your custom renderer
 # RegisterView: This class handles the registration of a new user by accepting a POST request.
 # It uses the UserSerializer to validate the data and create a new User object.
 # It then generates a refresh token for the user and returns it along with the user details.
+
+def get_tokens_for_user(user):
+    refresh = RefreshToken.for_user(user)
+    return {
+        'refresh': str(refresh),
+        'access': str(refresh.access_token),
+    }
+
 class RegisterView(APIView):
     renderer_classes = [CustomJSONRenderer]  # Use the custom renderer for this view
 
     def post(self, request):
         # Deserialize the request data into a UserSerializer object
-        serializer = UserSerializer(data=request.data)
+        serializer = UserRegistrationSerializer(data=request.data)
         # Check if the data is valid and raise an exception if not
         serializer.is_valid(raise_exception=True)
         # Save the user to the database
         user = serializer.save()
 
         # Generate a refresh token for the user
-        refresh = RefreshToken.for_user(user)
-        # Get the access token from the refresh token
-        access_token = refresh.access_token
+        token = get_tokens_for_user(user)
 
         # Return the user details, access token, and refresh token as a response
         return Response({
-            'user': serializer.data,
-            'access': str(access_token),
-            'refresh': str(refresh),
-        })
+            'token':token, 
+            'msg':'Registration Successful'
+            }, status=status.HTTP_201_CREATED)
 
 # Similarly, apply the custom renderer to other views if needed
 
@@ -45,42 +51,58 @@ class LoginView(APIView):
     renderer_classes = [CustomJSONRenderer]
 
     def post(self, request):
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
         # Get the email and password from the request data
-        email = request.data['email']
-        password = request.data['password']
+        email = serializer.data['email']
+        password = serializer.data['password']
         # Authenticate the user using the provided credentials
-        user = authenticate(email=email, password=password)
+        user = authenticate(
+            email=email, 
+            password=password
+            )
         
         # If the user authentication fails, raise an exception
-        if user is None:
-            raise AuthenticationFailed('Invalid credentials!')
+        if user is not None:
+            # Generate a refresh token for the user
+            token = get_tokens_for_user(user)
 
-        # Generate a refresh token for the user
-        refresh = RefreshToken.for_user(user)
-        # Get the access token from the refresh token
-        access_token = refresh.access_token
-
-        # Return the access token and refresh token as a response
-        return Response({
-            'access': str(access_token),
-            'refresh': str(refresh),
-        })
+            # Return the user details, access token, and refresh token as a response
+            return Response(
+                {
+                'token':token, 
+                'msg':'Registration Successful'
+                }, 
+                status=status.HTTP_201_CREATED
+                )
+        else:
+            return Response(
+                {
+                'errors':{
+                    'non_field_errors':['Email or Password is not Valid']
+                    }
+                }, 
+                status=status.HTTP_404_NOT_FOUND
+                )
 
 # UserView: This class handles the retrieval of user details by accepting a GET request.
 # It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
 # It serializes the user object and returns it as a response.
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
+    authentication_classes = [JWTAuthentication] #only requests with a valid JWT token in the Authorization header will be allowed to access the UserProfileView.
     renderer_classes = [CustomJSONRenderer]
 
     def get(self, request):
         # Get the authenticated user from the request
         user = request.user
         # Serialize the user object
-        serializer = UserSerializer(user)
+        serializer = UserProfileSerializer(user)
         # Return the serialized user data as a response
-        return Response(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+            )
 
 # LogoutView: This class handles the logout of a user by accepting a POST request.
 # It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
@@ -94,7 +116,7 @@ class LogoutView(APIView):
     def post(self, request):
         try:
             # Get the refresh token from the request data
-            refresh_token = request.data['refresh_token']
+            refresh_token = request.data['refresh']
             # Create a RefreshToken object from the refresh token
             token = RefreshToken(refresh_token)
             # Blacklist the refresh token, making it unusable

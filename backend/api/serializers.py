@@ -47,3 +47,50 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
         return instance
 
+
+class UserRegistrationSerializer(serializers.ModelSerializer):
+    # We are writing this becoz we need confirm password field in our Registratin Request
+    password2 = serializers.CharField(style={'input_type':'password'}, write_only=True)
+    class Meta:
+        model = User
+        fields=['email', 'username','first_name', 'last_name', 'password', 'password2']
+        extra_kwargs={
+        'password':{'write_only':True}
+        }
+
+    # Validating Password and Confirm Password while Registration
+    def validate(self, attrs):
+        password = attrs.get('password')
+        password2 = attrs.get('password2')
+        if password != password2:
+            raise serializers.ValidationError("Password and Confirm Password doesn't match")
+        
+        email = attrs.get('email')
+        username = attrs.get('username')
+        if User.objects.filter(email=email).exists(): # checks if the user with this email already exists
+            raise serializers.ValidationError("User with this email already exists")
+
+        if User.objects.filter(username=username).exists(): # checks if the user with this username already exists
+            raise serializers.ValidationError("User with this username already exists")
+        return attrs
+    # Override create method to handle 'password2' validation
+    def create(self, validated_data):
+        # Pop 'password2' from validated_data
+        password2 = validated_data.pop('password2')
+        # Call the superclass's create method to create the user
+        user = super().create(validated_data)
+        # Set the password for the user
+        user.set_password(validated_data['password'])
+        # Save the user
+        user.save()
+        return user
+class UserLoginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(max_length=255)
+    class Meta:
+        model = User
+        fields = ['email', 'password']
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email','username']

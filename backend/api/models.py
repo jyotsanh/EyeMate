@@ -23,6 +23,7 @@ class UserManager(BaseUserManager):
             first_name=first_name,  # Set the first name
             last_name=last_name,  # Set the last name
             username=username,  # Set the username
+            password = password,
             is_admin=False,  # Set the user as not an admin
         )
         # Set the password for the user

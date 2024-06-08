@@ -4,18 +4,12 @@
 # Import the necessary modules
 from django.urls import path, include  # Import the path and include functions from the django.urls module
 
-# Import the TokenRefreshView & TokenObtainPairView from the rest_framework_simplejwt.views module
-from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView  
-
 # Import the user views
 from api.views.user_views import *  # Import the user views from the api.views.user_views module
 
 # Define the URL patterns
 urlpatterns = [
-    
-    path('gettoken/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('refreshtoken/', TokenRefreshView.as_view(), name='token_refresh'),
-    
+
     # Map the '/register/' URL to the RegisterView
     path('register/', RegisterView.as_view()),  # Map the URL to the RegisterView.as_view() function
     

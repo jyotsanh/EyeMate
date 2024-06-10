@@ -21,7 +21,7 @@ urlpatterns = [
     
     # Map the '/logout/' URL to the LogoutView
     path('logout/', LogoutView.as_view()), # Map the URL to the LogoutView.as_view() function
-     
+    
     path('delete/', DeleteUserView.as_view(), name='delete_user'),
     
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'), 

@@ -125,7 +125,7 @@ class LogoutView(APIView):
             return Response({'message': 'Success'})
         except Exception as e:
             # If an exception occurs, return the exception message as a response with a 400 status code
-            return Response({'message': str(e)}, status=400)
+            return Response({'message': str(e)}, status=status.HTTP_404_NOT_FOUND)
 
 # DeleteUserView: This class handles the deletion of a user by accepting a DELETE request.
 # It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
@@ -160,7 +160,7 @@ class ResetPasswordView(APIView):
         
         # If no new password is provided, return an error response
         if not new_password:
-            return Response({'message': 'New password not provided'}, status=400)
+            return Response({'message': 'New password not provided'}, status=status.HTTP_404_NOT_FOUND)
         
         # Set the new password for the user
         user.password = make_password(new_password)

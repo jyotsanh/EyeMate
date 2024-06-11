@@ -24,5 +24,7 @@ urlpatterns = [
     path('delete/', DeleteUserView.as_view(), name='delete_user'),
     
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'), 
+
+     path('update/', UserUpdateView.as_view(), name='user-update'),
 ]
 

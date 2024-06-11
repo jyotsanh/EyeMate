@@ -1,10 +1,8 @@
-# Define a custom user model for the API
-
 # Import the necessary modules for user management
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.exceptions import ValidationError
-
+from django.utils import timezone
 
 # Define a custom user manager class
 class UserManager(BaseUserManager):
@@ -43,7 +41,6 @@ class UserManager(BaseUserManager):
         # Return the created superuser
         return user
 
-
 # Define the custom user model
 class User(AbstractBaseUser):
     # Define the fields for the user model
@@ -53,6 +50,7 @@ class User(AbstractBaseUser):
     email = models.EmailField(max_length=200, unique=True)  # Email address of the user
     password = models.CharField(max_length=255)  # Password for the user
     is_admin = models.BooleanField(default=False)  # Whether the user is an admin or not
+    user_created = models.DateTimeField(default=timezone.now)  # Date and time when the user was created
 
     # Set the custom user manager for this model
     objects = UserManager()
@@ -86,5 +84,3 @@ class User(AbstractBaseUser):
     def validate_username(self, value):
         if not value:
             raise ValidationError('Username cannot be blank')
-
-

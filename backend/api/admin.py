@@ -1,6 +1,6 @@
 # Import necessary modules and models for the admin interface
 from django.contrib import admin
-from .models import *
+from .models import User
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # Subclass the UserAdmin class to customize the admin interface for the User model
@@ -21,7 +21,7 @@ class UserModelAdmin(BaseUserAdmin):
         return self.get_fields(request, obj)
 
     # Define which fields to display in the admin interface
-    list_display = ('id', 'username', 'is_admin', 'is_active','first_name','last_name','email')
+    list_display = ('id', 'username', 'is_admin', 'is_active', 'first_name', 'last_name', 'email', 'user_created')
 
     # Define which fields to filter by in the admin interface
     list_filter = ('is_admin',)
@@ -31,6 +31,7 @@ class UserModelAdmin(BaseUserAdmin):
         ('User Credentials', {'fields': ('email', 'username', 'password')}),
         ('Personal Info', {'fields': ('first_name', 'last_name')}),
         ('Permissions', {'fields': ('is_admin',)}),
+        ('Important Dates', {'fields': ('user_created', 'last_login')}),
     )
 
     # Define the fields to display when adding a new user in the admin interface
@@ -52,4 +53,3 @@ class UserModelAdmin(BaseUserAdmin):
 
 # Register the UserModelAdmin class with the User model for the admin interface
 admin.site.register(User, UserModelAdmin)
-

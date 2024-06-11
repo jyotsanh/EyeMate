@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from rest_framework import status
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import IsAuthenticated
@@ -9,12 +10,18 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 from api.renderers import CustomJSONRenderer  # Import your custom renderer
+from rest_framework.permissions import BasePermission
+
+class IsAdminUser(BasePermission):
+    def has_permission(self, request, view):
+        return request.user and request.user.is_admin
+
 
 # RegisterView: This class handles the registration of a new user by accepting a POST request.
 # It uses the UserSerializer to validate the data and create a new User object.
 # It then generates a refresh token for the user and returns it along with the user details.
 class RegisterView(APIView):
-    renderer_classes = [CustomJSONRenderer]  # Use the custom renderer for this view
+    renderer_classes = [CustomJSONRenderer]
 
     def post(self, request):
         # Deserialize the request data into a UserSerializer object
@@ -35,8 +42,6 @@ class RegisterView(APIView):
             'access': str(access_token),
             'refresh': str(refresh),
         })
-
-# Similarly, apply the custom renderer to other views if needed
 
 # LoginView: This class handles the login of a user by accepting a POST request.
 # It authenticates the user using the provided email and password.
@@ -66,9 +71,9 @@ class LoginView(APIView):
             'refresh': str(refresh),
         })
 
-# UserView: This class handles the retrieval of user details by accepting a GET request.
+# UserView: This class handles getting the details of an authenticated user by accepting a GET request.
 # It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
-# It serializes the user object and returns it as a response.
+# It returns the user details as a response.
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -105,25 +110,25 @@ class LogoutView(APIView):
             # If an exception occurs, return the exception message as a response with a 400 status code
             return Response({'message': str(e)}, status=400)
 
-# DeleteUserView: This class handles the deletion of a user by accepting a DELETE request.
+# DeleteUserView: This class handles deleting an authenticated user by accepting a DELETE request.
 # It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
+# It deletes the user from the database and returns a success message as a response.
 class DeleteUserView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdminUser]  # Use the custom permission here
     authentication_classes = [JWTAuthentication]
     renderer_classes = [CustomJSONRenderer]
 
     def delete(self, request):
         # Get the authenticated user from the request
         user = request.user
-        
         # Delete the user from the database
         user.delete()
-        
         # Return a success message as a response
         return Response({'message': 'User deleted successfully'})
 
-# ResetPasswordView: This class handles the reset of a user's password by accepting a POST request.
+# ResetPasswordView: This class handles resetting the password of an authenticated user by accepting a POST request.
 # It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
+# It sets the new password for the user and returns a success message as a response.
 class ResetPasswordView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
@@ -132,17 +137,45 @@ class ResetPasswordView(APIView):
     def post(self, request):
         # Get the authenticated user from the request
         user = request.user
-        
         # Get the new password from the request data
         new_password = request.data.get('new_password')
-        
         # If no new password is provided, return an error response
         if not new_password:
             return Response({'message': 'New password not provided'}, status=400)
-        
         # Set the new password for the user
-        user.password = make_password(new_password)
+        user.set_password(new_password)
         user.save()
-        
         # Return a success message as a response
         return Response({'message': 'Password reset successfully'})
+
+# UserUpdateView: This class handles updating the details of an authenticated user by accepting a PATCH request.
+# It requires the user to be authenticated and uses the JWTAuthentication class for authentication.
+# It updates the user details with the provided data and returns the updated user details as a response.
+class UserUpdateView(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUser]  # Use the custom permission here
+    authentication_classes = [JWTAuthentication]
+    renderer_classes = [CustomJSONRenderer]
+
+    def patch(self, request):
+        # Get the authenticated user from the request
+        user = request.user
+        # Deserialize the request data into a UserSerializer object
+        serializer = UserSerializer(user, data=request.data, partial=True)
+        # Check if the data is valid and raise an exception if not
+        serializer.is_valid(raise_exception=True)
+        # Save the updated user to the database
+        serializer.save()
+        # Return the updated user details as a response
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        # Get the authenticated user from the request
+        user = request.user
+        # Deserialize the request data into a UserSerializer object
+        serializer = UserSerializer(user, data=request.data)
+        # Check if the data is valid and raise an exception if not
+        serializer.is_valid(raise_exception=True)
+        # Save the updated user to the database
+        serializer.save()
+        # Return the updated user details as a response
+        return Response(serializer.data, status=status.HTTP_200_OK)

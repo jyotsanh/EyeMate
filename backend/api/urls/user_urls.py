@@ -9,18 +9,19 @@ from api.views.user_views import *  # Import the user views from the api.views.u
 
 # Define the URL patterns
 urlpatterns = [
+
     # Map the '/register/' URL to the RegisterView
     path('register/', RegisterView.as_view()),  # Map the URL to the RegisterView.as_view() function
     
     # Map the '/login/' URL to the LoginView
     path('login/', LoginView.as_view()),  # Map the URL to the LoginView.as_view() function
     
-    # Map the '/authenticate/' URL to the UserView
-    path('authenticate/', UserView.as_view()),  # Map the URL to the UserView.as_view() function
+    # Map the '/profile/' URL to the UserView
+    path('profile/', UserView.as_view()),  # Map the URL to the UserView.as_view() function
     
     # Map the '/logout/' URL to the LogoutView
     path('logout/', LogoutView.as_view()), # Map the URL to the LogoutView.as_view() function
-     
+    
     path('delete/', DeleteUserView.as_view(), name='delete_user'),
     
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'), 

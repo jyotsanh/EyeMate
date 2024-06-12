@@ -104,7 +104,7 @@ class LoginView(APIView):
         OTP.objects.create(
             user=user,
             otp_code=otp_code,
-            expires_at=timezone.now() + timedelta(minutes=10)
+            expires_at=timezone.now() + timedelta(minutes=5)
         )
         send_mail(
             'Your OTP Code',
@@ -172,7 +172,7 @@ class ResetPasswordView(APIView):
         OTP.objects.create(
             user=user,
             otp_code=otp_code,
-            expires_at=timezone.now() + timedelta(minutes=10)
+            expires_at=timezone.now() + timedelta(minutes=5)
         )
         send_mail(
             'Your OTP Code',

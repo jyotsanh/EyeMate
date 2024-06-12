@@ -2,13 +2,10 @@
 from rest_framework import serializers
 from api.models import User
 
-
-class OTPSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-
 class OTPVerifySerializer(serializers.Serializer):
     email = serializers.EmailField()
     otp_code = serializers.CharField(max_length=6)
+    new_password = serializers.CharField(max_length=255)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:

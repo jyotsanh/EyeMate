@@ -26,6 +26,5 @@ urlpatterns = [
     
     path('reset-password/', ResetPasswordView.as_view(), name='reset_password'), 
 
-     path('update/', UserUpdateView.as_view(), name='user-update'),
 ]
 

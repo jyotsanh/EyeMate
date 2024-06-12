@@ -7,12 +7,12 @@ import json
 def login_test():
     URL = "http://127.0.0.1:8000/api/user/login/"
     data = {
-        'email':'test@example.com',
+        'email':'test02@example.com',
         'password':'password123'
     }
     response = requests.post(url=URL, data=data)
 
-    if response.status_code == 200:
+    if response.status_code == 201:
         # Login successful, extract tokens from the response
         tokens = response.json()
 
@@ -37,10 +37,10 @@ def logout_test():
 def register_test():
     url = "http://127.0.0.1:8000/api/user/register/"
     data = {
-        'email': 'test@example.com',
-        'username': 'testuser',
-        'first_name': 'Test',
-        'last_name': 'User',
+        'email': 'test02@example.com',
+        'username': 'testuser02',
+        'first_name': 'Test02',
+        'last_name': 'User02',
         'password': 'password123',
         'password2': 'password123',
     }
@@ -54,7 +54,7 @@ def register_test():
 def profile_test():
     URL = "http://127.0.0.1:8000/api/user/profile/"
     headers = {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE3ODY1MDc3LCJpYXQiOjE3MTc4NjQxNzcsImp0aSI6ImVlMzNiNDIzYmExZTRjMDk4ZWY1NTg1YTYzMTRhZTY2IiwidXNlcl9pZCI6NH0.-_-1vA_gyWjHcUVS_T_9Ap2IxghnnXGzkNFW5GpTUb4'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE4MTY2NjI0LCJpYXQiOjE3MTgxNjY1NjQsImp0aSI6IjdiZjYyNzQ3NjFjODQ4MDI5NWQ0MTM5MTc4NzRmMzcwIiwidXNlcl9pZCI6Nn0.vCvBm7FCLYSBsD6CSErNuss4D668vCvGM_m3sOFXY38'
     }
     
     response = requests.get(url=URL, headers=headers)

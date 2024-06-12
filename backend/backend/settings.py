@@ -47,7 +47,7 @@ REST_FRAMEWORK = {
 # in REST_FRAMEWORK, you ensure that all requests to your API endpoints are authenticated using JWT tokens.
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15), # When a user logs in, they receive an access token that is valid for a specific period, say 5 minutes.
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1), # When a user logs in, they receive an access token that is valid for a specific period, say 5 minutes.
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1), # When the access token expires after 1 days, the user can use the refresh token to get a new access token without logging in again.
     "ROTATE_REFRESH_TOKENS": True, # With ROTATE_REFRESH_TOKENS set to True, the user also gets a new refresh token with a renewed expiration
     "BLACKLIST_AFTER_ROTATION": True, # Enhances security by ensuring that old refresh tokens cannot be reused.

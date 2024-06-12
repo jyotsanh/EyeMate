@@ -18,7 +18,7 @@ class CustomJSONRenderer(JSONRenderer):
         # Otherwise, treat it as a general successful response
         else:
             response = {
-                'status': 'success',
+                'status': 'error',
                 'data': data
             }
 

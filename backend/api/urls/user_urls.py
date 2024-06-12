@@ -7,24 +7,15 @@ from django.urls import path, include  # Import the path and include functions f
 # Import the user views
 from api.views.user_views import *  # Import the user views from the api.views.user_views module
 
-# Define the URL patterns
 urlpatterns = [
-
-    # Map the '/register/' URL to the RegisterView
-    path('register/', RegisterView.as_view()),  # Map the URL to the RegisterView.as_view() function
-    
-    # Map the '/login/' URL to the LoginView
-    path('login/', LoginView.as_view()),  # Map the URL to the LoginView.as_view() function
-    
-    # Map the '/profile/' URL to the UserView
-    path('profile/', UserView.as_view()),  # Map the URL to the UserView.as_view() function
-    
-    # Map the '/logout/' URL to the LogoutView
-    path('logout/', LogoutView.as_view()), # Map the URL to the LogoutView.as_view() function
-    
-    path('delete/', DeleteUserView.as_view(), name='delete_user'),
-    
-    path('reset-password/', ResetPasswordView.as_view(), name='reset_password'), 
-
+    path('register/', RegisterView.as_view(), name='register'),
+    path('verify-otp/', OTPVerifyView.as_view(), name='verify-otp'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('verify-login-otp/', OTPLoginVerifyView.as_view(), name='verify-login-otp'),
+    path('profile/', UserView.as_view(), name='profile'),
+    path('logout/', LogoutView.as_view(), name='logout'),
+    path('reset-password/', ResetPasswordView.as_view(), name='reset-password'),
+    path('verify-reset-password/', VerifyResetPasswordView.as_view(), name='verify-reset-password'),
+    path('delete-user/', DeleteUserView.as_view(), name='delete-user'),
+    path('update-user/', UserUpdateView.as_view(), name='update-user'),
 ]
-

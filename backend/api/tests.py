@@ -63,7 +63,7 @@ def profile_test():
 def otp_test():
     URL = "http://127.0.0.1:8000/api/user/reset-password/"
     headers = {
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE4MjExNDIyLCJpYXQiOjE3MTgyMTExMjIsImp0aSI6ImNkNmEzMjJiZjVhZTQzYjI4NTAyODU4OGJhZGNjMDA2IiwidXNlcl9pZCI6OH0.XeIix175V8I81mPlKBkS6CEqxEyaQ3NIXwLJMcsN__8'
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzE4MjQyNTQ1LCJpYXQiOjE3MTgyNDIyNDUsImp0aSI6ImM5Mjk0ZjFjMzVkYjRiYjU5ZTYyMmIxOTAxNjQyZGZkIiwidXNlcl9pZCI6OH0.I0FXxkxGPINZKXi690E7bvu7Okiruig99UtX5ML_UiM'
     }
     
     data = {
@@ -86,4 +86,4 @@ def otp_reset_password():
     response = requests.post(url=URL, data=data, headers=headers)
     print(response.json())
     
-login_test()
+otp_test()

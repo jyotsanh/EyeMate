@@ -1,6 +1,6 @@
 # Import necessary modules and models for the admin interface
 from django.contrib import admin
-from .models import User
+from .models import *
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 # Subclass the UserAdmin class to customize the admin interface for the User model
@@ -53,3 +53,46 @@ class UserModelAdmin(BaseUserAdmin):
 
 # Register the UserModelAdmin class with the User model for the admin interface
 admin.site.register(User, UserModelAdmin)
+
+# Register other models with default admin interfaces
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'price', 'stock_quantity', 'created_at', 'updated_at')
+    search_fields = ('name', 'category', 'brand')
+    readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(ProductImage)
+class ProductImageAdmin(admin.ModelAdmin):
+    list_display = ('product', 'image_url', 'alt_text', 'created_at', 'updated_at')
+    search_fields = ('product__name',)
+    readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ('user', 'order_date', 'total_amount', 'created_at', 'updated_at')
+    search_fields = ('user__username',)
+    readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(OrderItem)
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ('order', 'product', 'quantity', 'price', 'created_at', 'updated_at')
+    search_fields = ('order__id', 'product__name')
+    readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
+    list_display = ('product', 'user', 'rating', 'created_at', 'updated_at')
+    search_fields = ('product__name', 'user__username')
+    readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at', 'updated_at')
+    search_fields = ('user__username',)
+    readonly_fields = ('created_at', 'updated_at')
+
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ('cart', 'product', 'quantity', 'created_at', 'updated_at')
+    search_fields = ('cart__user__username', 'product__name')
+    readonly_fields = ('created_at', 'updated_at')

@@ -169,6 +169,13 @@ REST_FRAMEWORK = {
         # The custom JSON renderer is defined in the 'api' app.
         'api.renderers.CustomJSONRenderer',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+     'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+        'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter',
+    ],
     # Set the default authentication class to JWTAuthentication.
     # This authentication class uses JWT (JSON Web Tokens) for authentication.
     # JWT tokens are used for stateless authentication and provide a secure way to authenticate requests.
@@ -176,6 +183,14 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+     'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.UserRateThrottle',
+        'rest_framework.throttling.AnonRateThrottle',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '100/day',  # Limit each user to 100 requests per day
+        'anon': '10/day',  # Limit each anonymous user to 10 requests per day
+    }
 }
 
 CORS_ALLOWED_ORIGINS = [
@@ -185,14 +200,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-<<<<<<< HEAD
 EMAIL_HOST_USER = os.getenv('EMAIL')
 EMAIL_HOST_PASSWORD = os.getenv('PSWD')
 
-=======
-EMAIL_HOST_USER = 'lalllaop67@gmail.com'
-EMAIL_HOST_PASSWORD = 'ysjqcuuwpwp'
->>>>>>> dcff84e209bb9ab5ad6d27b184cb4f292f4a4271
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

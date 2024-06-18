@@ -3,14 +3,13 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-from rest_framework.decorators import permission_classes
 from api.models import Product
 from api.serializers import ProductSerializer,Review,ReviewSerializer
 from rest_framework.permissions import IsAdminUser
 from api.renderers import CustomJSONRenderer
 
 class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 8
+    page_size = 4 
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
@@ -19,8 +18,9 @@ class ProductListView(APIView):
     
     def get(self, request):
         query = request.query_params.get('keyword', '')
-        products = Product.objects.filter(name__icontains=query).order_by('-id')
         
+        products = Product.objects.filter(name__icontains=query).order_by('-id')
+        print(query)
         paginator = StandardResultsSetPagination()
         paginated_products = paginator.paginate_queryset(products, request)
         serializer = ProductSerializer(paginated_products, many=True)

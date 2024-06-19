@@ -7,6 +7,8 @@ from api.models import Product
 from api.serializers import ProductSerializer,Review,ReviewSerializer
 from rest_framework.permissions import IsAdminUser
 from api.renderers import CustomJSONRenderer
+from django.db.models import Q
+
 
 class StandardResultsSetPagination(PageNumberPagination):
     page_size = 4 
@@ -17,24 +19,31 @@ class ProductListView(APIView):
     renderer_classes = [CustomJSONRenderer]
     
     def get(self, request):
-        query = request.query_params.get('keyword', '')
+        query = request.query_params.get('keyword', '') 
+        # returns empty '' otherwise if keywords is in url 'api/products/?keyword=sun' it returns all the product name which contain word 'sun' in it
         
-        products = Product.objects.filter(name__icontains=query).order_by('-id')
-        print(query)
-        paginator = StandardResultsSetPagination()
-        paginated_products = paginator.paginate_queryset(products, request)
-        serializer = ProductSerializer(paginated_products, many=True)
+        search_filter = (
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(category__icontains=query)
+        )
         
-        return paginator.get_paginated_response(serializer.data)
+        products = Product.objects.filter(search_filter).order_by('-id') # order by descending order
+        print(query) # prints query 'sun'
+        paginator = StandardResultsSetPagination() # instance of pagination class
+        paginated_products = paginator.paginate_queryset(products, request) # returns the products in pagination format
+        serializer = ProductSerializer(paginated_products, many=True) # serialize the products
+        
+        return paginator.get_paginated_response(serializer.data) # returns the products in pagination format
 
 class TopProductsView(APIView):
     renderer_classes = [CustomJSONRenderer]
 
     def get(self, request):
-        products = Product.objects.filter(rating__gte=4).order_by('-rating')[:5]
+        products = Product.objects.filter(average_rating__gte=4).order_by('-average_rating')[:6]
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
-    
+
 class CreateProductReviewView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
     renderer_classes = [CustomJSONRenderer]

@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.db.models import Avg
 
 
 
@@ -101,6 +102,10 @@ class Product(models.Model):
     stock_quantity = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    
+    def average_rating(self):
+        return self.reviews.aggregate(Avg('rating')).get('rating__avg', 0)
     def __str__(self):
         return self.name
 

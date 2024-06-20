@@ -53,17 +53,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = ['first_name', 'last_name', 'email', 'username']
 
 
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = '__all__'
 
-class ProductSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Product
-        fields = ['id', 'name', 'description', 'price', 'category', 'frame_material', 'lens_material', 'style_shapes', 'color', 'stock_quantity', 'created_at', 'updated_at', 'images']
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -81,6 +71,19 @@ class ReviewSerializer(serializers.ModelSerializer):
         model = Review
         fields = '__all__'
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
+
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = '__all__'
+
+class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImageSerializer(many=True, read_only=True)
+    rating = ReviewSerializer(read_only=True)
+
+    class Meta:
+        model = Product
+        fields = ['id', 'name', 'description', 'price', 'category', 'frame_material', 'lens_material', 'style_shapes', 'color', 'stock_quantity', 'created_at', 'updated_at', 'images','reviews','rating']
 
 
 

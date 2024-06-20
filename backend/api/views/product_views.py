@@ -8,6 +8,7 @@ from api.serializers import ProductSerializer,Review,ReviewSerializer
 from rest_framework.permissions import IsAdminUser
 from api.renderers import CustomJSONRenderer
 from django.db.models import Q
+from django.db.models import Avg
 
 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -38,9 +39,8 @@ class ProductListView(APIView):
 
 class TopProductsView(APIView):
     renderer_classes = [CustomJSONRenderer]
-
-    def get(self, request):
-        products = Product.objects.filter(average_rating__gte=4).order_by('-average_rating')[:6]
+    def get(self, request, format=None):
+        products = Product.objects.annotate(average_rating=Avg('reviews__rating')).filter(average_rating__gte=4).order_by('-average_rating')[:6]
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 

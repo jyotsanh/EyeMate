@@ -53,7 +53,7 @@ class RegisterView(APIView):
             {
                 'token': token, 
                 'msg': 'Registration successfully'
-            }, status=status.HTTP_200_CREATED
+            }, status=status.HTTP_201_CREATED
             )
         
 class LoginView(APIView):

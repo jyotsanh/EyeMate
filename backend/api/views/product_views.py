@@ -16,27 +16,34 @@ class StandardResultsSetPagination(PageNumberPagination):
     page_size_query_param = 'page_size'
     max_page_size = 1000
 
+
 class ProductListView(APIView):
     renderer_classes = [CustomJSONRenderer]
     
     def get(self, request):
         query = request.query_params.get('keyword', '') 
-        # returns empty '' otherwise if keywords is in url 'api/products/?keyword=sun' it returns all the product name which contain word 'sun' in it
-        
         search_filter = (
             Q(name__icontains=query) |
             Q(description__icontains=query) |
             Q(category__icontains=query)
         )
+    
+        products = Product.objects.filter(search_filter).order_by('-id') 
+        paginator = StandardResultsSetPagination() 
+        paginated_products = paginator.paginate_queryset(products, request) 
+        serializer = ProductSerializer(paginated_products, many=True) 
         
-        products = Product.objects.filter(search_filter).order_by('-id') # order by descending order
-        print(query) # prints query 'sun'
-        paginator = StandardResultsSetPagination() # instance of pagination class
-        paginated_products = paginator.paginate_queryset(products, request) # returns the products in pagination format
-        serializer = ProductSerializer(paginated_products, many=True) # serialize the products
+        next_link = paginator.get_next_link() if paginator.get_next_link() is not None else ''
+        previous_link = paginator.get_previous_link() if paginator.get_previous_link() is not None else ''
         
-        return paginator.get_paginated_response(serializer.data) # returns the products in pagination format
-
+        data = {
+             'results': serializer.data,
+            'count': paginator.page.paginator.count,
+            'next': next_link,
+            'previous': previous_link
+                }   
+        
+        return Response(data)
 class TopProductsView(APIView):
     renderer_classes = [CustomJSONRenderer]
     def get(self, request, format=None):

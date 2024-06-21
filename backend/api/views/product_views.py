@@ -4,7 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from api.models import Product
-from api.serializers import ProductSerializer,Review,ReviewSerializer
+from api.serializers import ProductSerializer,Review,ReviewSerializer,TopProductsSerializer
 from rest_framework.permissions import IsAdminUser
 from api.renderers import CustomJSONRenderer
 from django.db.models import Q
@@ -28,27 +28,32 @@ class ProductListView(APIView):
             Q(category__icontains=query)
         )
     
-        products = Product.objects.filter(search_filter).order_by('-id') 
+        products = Product.objects.filter(search_filter).order_by('id') 
         paginator = StandardResultsSetPagination() 
         paginated_products = paginator.paginate_queryset(products, request) 
-        serializer = ProductSerializer(paginated_products, many=True) 
         
-        next_link = paginator.get_next_link() if paginator.get_next_link() is not None else ''
-        previous_link = paginator.get_previous_link() if paginator.get_previous_link() is not None else ''
+        # Check if paginated_products is None
+        if paginated_products is not None:
+            serializer = ProductSerializer(paginated_products, many=True)
+            data = serializer.data
+        else:
+            
+            data = []
+        next_link = paginator.get_next_link() if paginator.get_next_link() else ''
+        previous_link = paginator.get_previous_link() if paginator.get_previous_link() else ''
         
-        data = {
-             'results': serializer.data,
-            'count': paginator.page.paginator.count,
+        response_data = {
+            'results': data,
+            'count': paginator.page.paginator.count if paginated_products is not None else 0,
             'next': next_link,
             'previous': previous_link
-                }   
-        
-        return Response(data)
+        } 
+        return Response(response_data)
 class TopProductsView(APIView):
     renderer_classes = [CustomJSONRenderer]
     def get(self, request, format=None):
         products = Product.objects.annotate(average_rating=Avg('reviews__rating')).filter(average_rating__gte=4).order_by('-average_rating')[:6]
-        serializer = ProductSerializer(products, many=True)
+        serializer = TopProductsSerializer(products, many=True)
         return Response(serializer.data)
 
 class CreateProductReviewView(APIView):

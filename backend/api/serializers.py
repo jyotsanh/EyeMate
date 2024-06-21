@@ -52,10 +52,54 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = User
         fields = ['first_name', 'last_name', 'email', 'username']
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'
+        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
 
 
+class ProductImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImage
+        fields = '__all__'
 
+class ProductSerializer(serializers.ModelSerializer):
+    reviews = ReviewSerializer(many=True, read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True)
+    average_rating = serializers.SerializerMethodField()
 
+    class Meta:
+        model = Product
+        fields = [
+            'id', 'name', 'description', 'price', 'category', 
+            'frame_material', 'lens_material', 'style_shapes', 
+            'color', 'stock_quantity', 'created_at', 'updated_at', 
+            'images', 'average_rating','reviews'
+        ]
+        read_only_fields = ['created_at', 'updated_at','rating']
+
+    def get_average_rating(self, obj):
+        return obj.average_rating()
+    
+    
+class TopProductsSerializer(serializers.ModelSerializer):
+    reviews = ReviewSerializer(many=True, read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True)
+    average_rating = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Product
+        fields = [
+            'id', 'name', 'description', 'price', 'category', 
+            'frame_material', 'lens_material', 'style_shapes', 
+            'color', 'stock_quantity', 'created_at', 'updated_at', 
+            'images', 'average_rating','reviews'
+        ]
+        read_only_fields = ['created_at', 'updated_at','rating']
+
+    def get_average_rating(self, obj):
+        return obj.average_rating
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
@@ -66,33 +110,6 @@ class OrderItemSerializer(serializers.ModelSerializer):
         model = OrderItem
         fields = '__all__'
 
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = '__all__'
-        read_only_fields = ['id', 'user', 'created_at', 'updated_at']
-
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = '__all__'
-
-class ProductSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(many=True, read_only=True)
-    average_rating = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Product
-        fields = [
-            'id', 'name', 'description', 'price', 'category', 
-            'frame_material', 'lens_material', 'style_shapes', 
-            'color', 'stock_quantity', 'created_at', 'updated_at', 
-            'images', 'average_rating'
-        ]
-        read_only_fields = ['created_at', 'updated_at','rating']
-
-    def get_average_rating(self, obj):
-        return obj.average_rating
 
 
 class CartItemSerializer(serializers.ModelSerializer):

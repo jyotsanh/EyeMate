@@ -48,14 +48,21 @@ class RegisterView(APIView):
         serializer = UserRegistrationSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        token = get_tokens_for_user(user)
-        return Response(
+        tokens = get_tokens_for_user(user)
+        return   Response(
             {
-                'token': token, 
+                'token':tokens,
                 'msg': 'Registration successfully'
             }, status=status.HTTP_201_CREATED
             )
-        
+        # response.set_cookie(
+        #     key='jwt',  # Name of the cookie
+        #     value=tokens,  # The JWT token
+        #     httponly=True,  # Ensures the cookie is not accessible via JavaScript
+        #     secure=True,  # Ensures the cookie is only sent over HTTPS
+        #     samesite='Strict'  # Prevents the cookie from being sent in cross-site requests
+        # )
+        # return response
 class LoginView(APIView):
     renderer_classes = [CustomJSONRenderer]
 

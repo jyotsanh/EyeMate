@@ -79,7 +79,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
-    rating = ReviewSerializer(read_only=True)
+    rating = ReviewSerializer(many=True,read_only=True)
 
     class Meta:
         model = Product

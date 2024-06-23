@@ -52,8 +52,22 @@ class ProductListView(APIView):
 class TopProductsView(APIView):
     renderer_classes = [CustomJSONRenderer]
     def get(self, request, format=None):
-        products = Product.objects.annotate(average_rating=Avg('reviews__rating')).filter(average_rating__gte=4).order_by('-average_rating')[:6]
+        products = Product.objects.annotate(
+            average_rating = Avg('reviews__rating')
+            ).filter(
+                average_rating__gte = 4
+                ).order_by('-average_rating')[:6]
         serializer = TopProductsSerializer(products, many=True)
+        return Response(serializer.data)
+
+class ProductDetailView(APIView):
+    renderer_classes = [CustomJSONRenderer]
+    def get(self, request, pk):
+        try:
+            product = Product.objects.get(pk=pk)
+        except Product.DoesNotExist:
+            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ProductSerializer(product)
         return Response(serializer.data)
 
 class CreateProductReviewView(APIView):

@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/products/',include('api.urls.product_urls')), # -> mistake
+    path('api/products/',include('api.urls.product_urls')), # -> done ('CeateProductReview is not checked')
     path('api/user/',include('api.urls.user_urls')), # ->checked
     path('api/orders/',include('api.urls.order_urls')),
     path('api/cart/',include('api.urls.cart_urls')),

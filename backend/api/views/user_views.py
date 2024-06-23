@@ -49,53 +49,63 @@ class RegisterView(APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
         tokens = get_tokens_for_user(user)
-        return   Response(
-            {
-                'token':tokens,
-                'msg': 'Registration successfully'
-            }, status=status.HTTP_201_CREATED
-            )
-        # response.set_cookie(
-        #     key='jwt',  # Name of the cookie
-        #     value=tokens,  # The JWT token
-        #     httponly=True,  # Ensures the cookie is not accessible via JavaScript
-        #     secure=True,  # Ensures the cookie is only sent over HTTPS
-        #     samesite='Strict'  # Prevents the cookie from being sent in cross-site requests
-        # )
-        # return response
+
+        response = Response(
+            {"msg": "Registration successful"},
+            status=status.HTTP_201_CREATED,
+        )
+        response.set_cookie(
+            key='refresh_token',
+            value=tokens['refresh'],
+            httponly=True,
+            secure=True,
+            samesite='Strict'
+        )
+        response.set_cookie(
+            key='access_token',
+            value=tokens['access'],
+            httponly=True,
+            secure=True,
+            samesite='Strict'
+        )
+        return response
+
+
 class LoginView(APIView):
     renderer_classes = [CustomJSONRenderer]
 
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        
-        email = serializer.validated_data['email']
-        password = serializer.validated_data['password']
-        
-        user = authenticate(
-                        email=email, 
-                        password=password
-                    )
-        
+
+        email = serializer.validated_data["email"]
+        password = serializer.validated_data["password"]
+
+        user = authenticate(username=email, password=password)
+
         if user is None:
             return Response(
-                {
-                    'errors': {
-                        'non_field_errors': ['Email or password is not valid']
-                                }
-                }, 
-                status=status.HTTP_404_NOT_FOUND
-                )
+                {"errors": {"non_field_errors": ["Email or password is not valid"]}},
+                status=status.HTTP_404_NOT_FOUND,
+            )
         token = get_tokens_for_user(user)
 
-        return Response(
-            {
-                'token': token, 
-                'msg': 'Log-in Successfull'
-            }
-                        ,status=status.HTTP_200_OK
-                        )
+        response = Response({"msg": "Log-in Successful"}, status=status.HTTP_200_OK)
+        response.set_cookie(
+            key='refresh_token',
+            value=token['refresh'],
+            httponly=True,
+            secure=True,
+            samesite='Strict'
+        )
+        response.set_cookie(
+            key='access_token',
+            value=token['access'],
+            httponly=True,
+            secure=True,
+            samesite='Strict'
+        )
+        return response
 
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
@@ -117,20 +127,16 @@ class LogoutView(APIView):
 
     def post(self, request):
         try:
-            refresh_token = request.data['refresh']
+            refresh_token = request.data["refresh"]
             token = RefreshToken(refresh_token)
             token.blacklist()
-            return Response(
-                {
-                    'message': 'Success'
-                    }
-                )
+
+            response = Response({"message": "Success"})
+            response.delete_cookie('refresh_token')
+            response.delete_cookie('access_token')
+            return response
         except Exception as e:
-            return Response(
-                {
-                    'message': str(e)
-                    }, status=status.HTTP_400_BAD_REQUEST
-                )
+            return Response({"message": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 class ResetPasswordView(APIView):
     permission_classes = [IsAuthenticated]

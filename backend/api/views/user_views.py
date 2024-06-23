@@ -18,9 +18,11 @@ from api.otp import OTP # Import the OTP model from otp.py
 import logging
 from django.core.mail import send_mail
 
+# Create a logger object to log messages to the console
 logger = logging.getLogger(__name__)
 
 
+# Import all the serializers and renderers from api folder
 from api.serializers import (
     UserSerializer,
     UserRegistrationSerializer, 
@@ -30,26 +32,39 @@ from api.serializers import (
 ) # all the serializers class from serialzers.py
 from api.renderers import CustomJSONRenderer
 
+
+# Define a function to generate tokens for a user
 def get_tokens_for_user(user):
+    # Create a refresh token for the user using the user model
     refresh = RefreshToken.for_user(user)
+    # Return the refresh and access tokens as a dictionary
     return {
         'refresh': str(refresh),
         'access': str(refresh.access_token),
     }
 
-class IsAdminUser(BasePermission): # checks if the user is an admin or not
+
+# Define a permission class to check if the user is an admin
+class IsAdminUser(BasePermission): 
     def has_permission(self, request, view):
+        # Check if the user is authenticated and if the user is an admin
         return request.user and request.user.is_admin 
 
+
+# Define a class for user registration
 class RegisterView(APIView):
     renderer_classes = [CustomJSONRenderer]
 
+    # Define a post method to handle user registration
     def post(self, request):
+        # Create a serializer object with the user registration data
         serializer = UserRegistrationSerializer(data=request.data)
+        # Check if the data is valid and raise an exception if not
         serializer.is_valid(raise_exception=True)
+        # Save the user with the serialized data
         user = serializer.save()
+        # Generate tokens for the user
         tokens = get_tokens_for_user(user)
-
         response = Response(
             {"msg": "Registration successful"},
             status=status.HTTP_201_CREATED,
@@ -74,8 +89,11 @@ class RegisterView(APIView):
 class LoginView(APIView):
     renderer_classes = [CustomJSONRenderer]
 
+    # Define a post method to handle user login
     def post(self, request):
+        # Create a serializer object with the user login data
         serializer = UserLoginSerializer(data=request.data)
+        # Check if the data is valid and raise an exception if not
         serializer.is_valid(raise_exception=True)
 
         email = serializer.validated_data["email"]
@@ -89,6 +107,25 @@ class LoginView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
         token = get_tokens_for_user(user)
+        # Create a response object with the success message and the tokens
+        response = Response({"msg": "Log-in Successful"}, status=status.HTTP_200_OK)
+        # Set cookies for the refresh and access tokens
+        response.set_cookie(
+            key='refresh_token',
+            value=token['refresh'],
+            httponly=True,
+            secure=True,
+            samesite='Strict'
+        )
+        response.set_cookie(
+            key='access_token',
+            value=token['access'],
+            httponly=True,
+            secure=True,
+            samesite='Strict'
+        )
+        # Return the response
+        return response
 
         response = Response({"msg": "Log-in Successful"}, status=status.HTTP_200_OK)
         response.set_cookie(
@@ -107,14 +144,19 @@ class LoginView(APIView):
         )
         return response
 
+# Define a class for user profile
 class UserView(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     renderer_classes = [CustomJSONRenderer]
 
+    # Define a get method to retrieve the user profile
     def get(self, request):
+        # Get the logged in user
         user = request.user
+        # Create a serializer object with the user profile data
         serializer = UserProfileSerializer(user)
+        # Return the serialized user profile data
         return Response(
             serializer.data, 
             status=status.HTTP_200_OK

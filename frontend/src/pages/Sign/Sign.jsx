@@ -1,22 +1,59 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './sign.css';
-import Apple from '../../assets/apples.svg';  // Correct path to the SVG file
+import Apple from '../../assets/apples.svg'; // Correct path to the SVG file
 import password from '../../assets/password.svg';
 import google from '../../assets/google.svg';
 import email from '../../assets/email.svg';
 import user from '../../assets/yes.svg';
+import { registerUser } from '../../services/api';
 
 function Sign() {
+  const [formData, setFormData] = useState({
+    email: '',
+    username: '',
+    first_name: '',
+    last_name: '',
+    password: '',
+    password2: '',
+  });
+
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await registerUser(formData);
+      console.log('Registration successful', response);
+      alert('Registration successful');
+      navigate('/'); // Navigate to the homepage
+    } catch (error) {
+      console.error('Error registering user', error.response ? error.response.data : error.message);
+      setError(error.response ? error.response.data.detail : error.message);
+    }
+  };
+
   return (
     <div>
-      <form className="sign-in-form">
+      <form className="sign-in-form" onSubmit={handleSubmit}>
         <div className="sign-in-flex-column">
           <label className="sign-in-label">First Name</label>
         </div>
         <div className="sign-in-inputForm">
           <img src={user} alt="user" />
-          <input type="text" className="sign-in-input" placeholder="Enter your First Name" />
+          <input
+            type="text"
+            className="sign-in-input"
+            name="first_name"
+            placeholder="Enter your First Name"
+            value={formData.first_name}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="sign-in-flex-column">
@@ -24,7 +61,29 @@ function Sign() {
         </div>
         <div className="sign-in-inputForm">
           <img src={user} alt="user" />
-          <input type="text" className="sign-in-input" placeholder="Enter your Last Name" />
+          <input
+            type="text"
+            className="sign-in-input"
+            name="last_name"
+            placeholder="Enter your Last Name"
+            value={formData.last_name}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="sign-in-flex-column">
+          <label className="sign-in-label">User Name</label>
+        </div>
+        <div className="sign-in-inputForm">
+          <img src={user} alt="user" />
+          <input
+            type="text"
+            className="sign-in-input"
+            name="username"
+            placeholder="Enter your User Name"
+            value={formData.username}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="sign-in-flex-column">
@@ -32,7 +91,14 @@ function Sign() {
         </div>
         <div className="sign-in-inputForm">
           <img src={email} alt="email" />
-          <input type="text" className="sign-in-input" placeholder="Enter your Email" />
+          <input
+            type="text"
+            className="sign-in-input"
+            name="email"
+            placeholder="Enter your Email"
+            value={formData.email}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="sign-in-flex-column">
@@ -40,10 +106,14 @@ function Sign() {
         </div>
         <div className="sign-in-inputForm">
           <img src={password} alt="password" />
-          <input type="password" className="sign-in-input" placeholder="Enter your Password" />
-          <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg">
-            <path d="M288 160a64 64 0 1064 64 64.072 64.072 0 00-64-64zm0 104a40 40 0 1140-40 40.045 40.045 0 01-40 40zm192-24c0 48.6-64 128-192 128S96 288.6 96 240s64-128 192-128 192 79.4 192 128zm-32 0c0-36.4-58.6-96-160-96s-160 59.6-160 96 58.6 96 160 96 160-59.6 160-96z" />
-          </svg>
+          <input
+            type="password"
+            className="sign-in-input"
+            name="password"
+            placeholder="Enter your Password"
+            value={formData.password}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="sign-in-flex-column">
@@ -51,7 +121,14 @@ function Sign() {
         </div>
         <div className="sign-in-inputForm">
           <img src={password} alt="password" />
-          <input type="password" className="sign-in-input" placeholder="Confirm your Password" />
+          <input
+            type="password"
+            className="sign-in-input"
+            name="password2"
+            placeholder="Confirm your Password"
+            value={formData.password2}
+            onChange={handleChange}
+          />
         </div>
 
         <div className="sign-in-flex-row">
@@ -61,11 +138,13 @@ function Sign() {
           </div>
           <span className="sign-in-span">Forgot password?</span>
         </div>
-        <button className="sign-in-button-submit">
+        <button className="sign-in-button-submit" type="submit">
           Sign Up
         </button>
+        {error && <p className="error-message">{error}</p>}
         <p className="sign-in-p">
-          Already have an account? <span className="sign-in-span">
+          Already have an account?{' '}
+          <span className="sign-in-span">
             <Link to="/login">Sign In</Link>
           </span>
         </p>

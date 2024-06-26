@@ -127,22 +127,7 @@ class LoginView(APIView):
         # Return the response
         return response
 
-        response = Response({"msg": "Log-in Successful"}, status=status.HTTP_200_OK)
-        response.set_cookie(
-            key='refresh_token',
-            value=token['refresh'],
-            httponly=True,
-            secure=True,
-            samesite='Strict'
-        )
-        response.set_cookie(
-            key='access_token',
-            value=token['access'],
-            httponly=True,
-            secure=True,
-            samesite='Strict'
-        )
-        return response
+
 
 # Define a class for user profile
 class UserView(APIView):

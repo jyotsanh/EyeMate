@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../assets/logo.png';
 import searchIcon from '../assets/Search.png';
-import wishlistIcon from '../assets/wish.png';
+/*import wishlistIcon from '../assets/wish.png';*/
 import accountIcon from '../assets/Account.png'; // Correct the image name if there's a typo
 import cartIcon from '../assets/Cart.png';
 // import { HiOutlineShoppingCart } from "react-icons/hi";
@@ -31,11 +31,13 @@ function Navbar() {
         
 
         <div className="actions">
-          <img src={wishlistIcon} alt="Wishlist Icon" />
+         {/* <img src={wishlistIcon} alt="Wishlist Icon" />*/}
           <NavLink to="/Login">
             <img src={accountIcon} alt="Account Icon" />
           </NavLink>
+          <NavLink to="/cart">
           <img src={cartIcon} alt="Cart Icon" />
+          </NavLink>
           {/* <HiOutlineShoppingCart /> */}
         </div>
       </nav>

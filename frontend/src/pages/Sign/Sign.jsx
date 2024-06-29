@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+
 import './sign.css';
 import Apple from '../../assets/apples.svg';  // Correct path to the SVG file
 import password from '../../assets/password.svg';

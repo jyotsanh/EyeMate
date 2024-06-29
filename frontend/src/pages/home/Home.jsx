@@ -4,8 +4,8 @@ import { Link } from 'react-router-dom';
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
-
+import { useCart } from '../../context/CartContext';
+import { AiOutlineHeart } from 'react-icons/ai';
 
 const NextArrow = ({ onClick }) => {
   return (
@@ -22,7 +22,10 @@ const PrevArrow = ({ onClick }) => {
     </div>
   );
 };
+
 const Home = () => {
+  const { dispatch } = useCart();
+
   const settings = {
     dots: true,
     infinite: true,
@@ -44,9 +47,12 @@ const Home = () => {
     prevArrow: <PrevArrow />,
   };
 
+  const handleAddToCart = (product) => {
+    dispatch({ type: 'ADD_TO_CART', payload: product });
+  };
+
   return (
     <div className="home">
-      {/* Image Slider Section */}
       <section className="image-slider">
         <Slider {...settings}>
           <div className="slide"><img src="Silde1.png" alt="Slide 1" /></div>
@@ -56,7 +62,96 @@ const Home = () => {
         </Slider>
       </section>
 
-      {/* Two-Image Section */}
+   
+      <section className="top-trending-products">
+      <h3>Top Products</h3>
+        <h2>Top Trending Products</h2>
+       
+        <Slider {...multipleItemsSettings}>
+          <div className="product">
+          <div className="image-container">
+            
+        
+         
+              <img src="p1.png" alt="Product 1" />
+              <p>Product 1</p>
+            <Link to="/ProductPage">
+          <div className="overlay">
+              <div className="icon">
+            <Link to="/cart">
+            <li onClick={() => handleAddToCart({ id: 1, name: 'Product 1', price: 500,image: 'p1.png'})}><AiOutlineHeart/></li>
+            </Link>
+            </div>
+          </div>
+          </Link>
+          </div>
+          <p>Product 1</p>
+          <p className="price">Rs 500</p>
+          </div>
+          
+          <div className="product">
+          <div className="image-container">
+            
+        
+           
+              <img src="p2.png" alt="Product 1" />
+              <p>Product 1</p>
+          
+            <div className="overlay">
+              <div className="icon">
+            <Link to="/cart">
+            <li onClick={() => handleAddToCart({ id: 2, name: 'Product 2', price: 500,image: 'p2.png'})}><AiOutlineHeart/></li>
+            </Link>
+            </div>
+          </div>
+   
+          </div>
+          <p>Product 2</p>
+          <p className="price">Rs 500</p>
+          </div>
+          <div className="product">
+          <div className="image-container">
+            
+        
+            <Link to="/Sunglasses">
+              <img src="p3.png" alt="Product 3" />
+              <p>Product 1</p>
+            </Link>
+            <div className="overlay">
+              <div className="icon">
+            <Link to="/cart">
+            <li onClick={() => handleAddToCart({ id: 3, name: 'Product 3', price: 500,image: 'p3.png'})}><AiOutlineHeart/></li>
+            </Link>
+            </div>
+          </div>
+   
+          </div>
+          <p>Product 3</p>
+          <p className="price">Rs 500</p>
+          </div>
+          <div className="product">
+          <div className="image-container">
+            
+        
+            
+              <img src="p4.png" alt="Product 4" />
+              <p>Product 4</p>
+          
+            <Link to="/ProductPage">
+            <div className="overlay">
+              <div className="icon">
+            <Link to="/cart">
+            <li onClick={() => handleAddToCart({ id: 4, name: 'Product 4', price: 500,image: 'p4.png'})}><AiOutlineHeart/></li>
+            </Link>
+            </div>
+          </div>
+          </Link>
+          </div>
+          <p>Product 4</p>
+          <p className="price">Rs 500</p>
+          </div>
+        </Slider>
+      </section>
       <section className="two-image-section">
         <h2>Elevate Your Look with Our Signature Features</h2>
         <div className="image-description">
@@ -76,55 +171,17 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      {/* Top Trending Products Section */}
-      <section className="top-trending-products">
-        <h2>Top Trending Products</h2>
-        <Slider {...multipleItemsSettings}>
-          <div className="product">
-            <Link to="/Sunglasses">
-              <img src="p1.png" alt="Product 1" />
-              <p>Product 1</p>
-            </Link>
-            <p className="price">Rs 500</p>
-          </div>
-          <div className="product">
-            <Link to="/Eyeglasses">
-              <img src="p2.png" alt="Product 2" />
-              <p className='Prod'>Product 2</p>
-            </Link>
-            <p className="price">Rs 500</p>
-          </div>
-          <div className="product">
-            <Link to="/Contactlens">
-              <img src="P3.png" alt="Product 3" />
-              <p>Product 3</p>
-            </Link>
-            <p className="price">Rs 500</p>
-          </div>
-          <div className="product">
-            <Link to="/Sunglasses">
-              <img src="p4.png" alt="Product 4" />
-              <p>Product 4</p>
-            </Link>
-            <p className="price">Rs 500</p>
-          </div>
-        </Slider>
-      </section>
-
-      {/* Location Section */}
+   {/*
       <section className="address">
         <h1>Store Location</h1>
-      <div className="location">
-      <img></img>
-              <p>Address:Bouddha<br/> 
-                Contact No:01-4325678<br/>
-                7am-7pm
-              </p>
-            
-       </div>
-        
-      </section>
+        <div className="location">
+          <img src="location.png" alt="Location" />
+          <p>Address: Bouddha<br />
+             Contact No: 01-4325678<br />
+             7am-7pm
+          </p>
+        </div>
+      </section>*/}
     </div>
   );
 };

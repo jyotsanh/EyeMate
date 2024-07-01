@@ -7,9 +7,10 @@ import json
 def login_test():
     URL = "http://127.0.0.1:8000/api/user/login/"
     data = {
-        'email':'jyotsan.hamal2027@pcmgmt.edu.np',
-        'password':'password321'
-    }
+  "email": "jyotsan.hamal2027@pcmgmt.edu.np",
+  "password": "password321"
+}
+
     response = requests.post(url=URL, data=data)
 
     if response.status_code == 200:
@@ -37,13 +38,14 @@ def logout_test():
 def register_test():
     url = "http://127.0.0.1:8000/api/user/register/"
     data = {
-        'email': 'jyotsan.hamal2027@pcmgmt.edu.np',
-        'username': 'testuser05',
-        'first_name': 'Test05',
-        'last_name': 'User05',
-        'password': 'password123',
-        'password2': 'password123',
-    }
+    "email": "Heee@gmail.com",
+    "username": "Test09",
+    "first_name": "Test06",
+    "last_name": "User07",
+    "password": "password1234",
+    "password2": "password1234"
+}
+
 
     # Send POST request with JSON data and correct Content-Type header
     response = requests.post(url, json=data)

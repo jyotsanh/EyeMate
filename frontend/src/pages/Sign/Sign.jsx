@@ -10,13 +10,14 @@ import { registerUser } from '../../services/api';
 
 function Sign() {
   const [formData, setFormData] = useState({
-    email: '',
-    username: '',
-    first_name: '',
-    last_name: '',
-    password: '',
-    password2: '',
-  });
+    "email": "",
+    "username": "",
+    "first_name": "",
+    "last_name": "",
+    "password": "",
+    "password2": ""
+}
+);
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -31,7 +32,7 @@ function Sign() {
       const response = await registerUser(formData);
       console.log('Registration successful', response);
       alert('Registration successful');
-      navigate('/'); // Navigate to the homepage
+      navigate('/Log'); // Navigate to the homepage
     } catch (error) {
       console.error('Error registering user', error.response ? error.response.data : error.message);
       setError(error.response ? error.response.data.detail : error.message);
@@ -165,3 +166,5 @@ function Sign() {
 }
 
 export default Sign;
+
+

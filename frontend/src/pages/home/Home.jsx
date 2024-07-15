@@ -1,16 +1,59 @@
 import React from 'react';
 import './Home.css';
 import { Link } from 'react-router-dom';
+import Slider from 'react-slick';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
+
+
+const NextArrow = ({ onClick }) => {
+  return (
+    <div className="slick-arrow slick-next" onClick={onClick}>
+      <i className="fa-solid fa-chevron-right"></i>
+    </div>
+  );
+};
+
+const PrevArrow = ({ onClick }) => {
+  return (
+    <div className="slick-arrow slick-prev" onClick={onClick}>
+      <i className="fas fa-chevron-left"></i>
+    </div>
+  );
+};
 const Home = () => {
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
+
+  const multipleItemsSettings = {
+    infinite: true,
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 3,
+    nextArrow: <NextArrow />,
+    prevArrow: <PrevArrow />,
+  };
+
   return (
     <div className="home">
       {/* Image Slider Section */}
       <section className="image-slider">
-        <div className="slide"><img src="Silde1.png" alt="Slide 1" /></div>
-        <div className="slide"><img src="Silde2.png" alt="Slide 2" /></div>
-        <div className="slide"><img src="silde3.png" alt="Slide 3" /></div>
-        <div className="slide"><img src="Silde4.png" alt="Slide 4" /></div>
+        <Slider {...settings}>
+          <div className="slide"><img src="Silde1.png" alt="Slide 1" /></div>
+          <div className="slide"><img src="Silde2.png" alt="Slide 2" /></div>
+          <div className="slide"><img src="silde3.png" alt="Slide 3" /></div>
+          <div className="slide"><img src="Silde4.png" alt="Slide 4" /></div>
+        </Slider>
       </section>
 
       {/* Two-Image Section */}
@@ -18,17 +61,16 @@ const Home = () => {
         <h2>Elevate Your Look with Our Signature Features</h2>
         <div className="image-description">
           <div className="image-text">
-            <img src="View1.png" alt="Image 1" />
-            <div className="description">
-              <h2>Ultra-lightweight Frames for Maximum Comfort</h2>
-              {/* <p>Our frames are engineered for ultimate comfort and durability. Say goodbye to heavy glasses that slide off.</p> */}
+            <img src="View1.png" alt="Image 1" className="eyeglasses" />
+            <div className="description1">
+              <h3>Ultra-lightweight Frames <br />for Maximum Comfort</h3>
               <Link to="/Sunglasses"><button>View More</button></Link>
             </div>
           </div>
           <div className="image-text">
-            <img src="view2.png" alt="Image 2" />
+            <img src="view2.png" alt="Image 2" className="polarized-glasses" />
             <div className="description">
-              <h2>Trendy Designs with UV Protection</h2>
+              <h3>Trendy Designs with UV Protection</h3>
               <Link to="/Sunglasses"><button>View More</button></Link>
             </div>
           </div>
@@ -38,7 +80,7 @@ const Home = () => {
       {/* Top Trending Products Section */}
       <section className="top-trending-products">
         <h2>Top Trending Products</h2>
-        <div className="products">
+        <Slider {...multipleItemsSettings}>
           <div className="product">
             <Link to="/Sunglasses">
               <img src="p1.png" alt="Product 1" />
@@ -67,7 +109,21 @@ const Home = () => {
             </Link>
             <p className="price">Rs 500</p>
           </div>
-        </div>
+        </Slider>
+      </section>
+
+      {/* Location Section */}
+      <section className="address">
+        <h1>Store Location</h1>
+      <div className="location">
+      <img></img>
+              <p>Address:Bouddha<br/> 
+                Contact No:01-4325678<br/>
+                7am-7pm
+              </p>
+            
+       </div>
+        
       </section>
     </div>
   );

@@ -30,7 +30,7 @@ nav .logo {
 /* Style for the logo image */
 nav .logo img {
     height: 50px; /* Set the height of the logo image */
-    margin-left: 5px; /* Add some left margin */
+    margin-left: 50px; /* Add some left margin */
 }
 
 /* Style for the search bar */
@@ -54,8 +54,10 @@ nav .search-bar input {
 }
 
 /* Style for the search bar icon */
-nav .search-bar i {
-    margin-right: 15px;
+nav .search-bar img {
+    margin-right: 10px;
+    height: 30px; /* Set the height of the search icon */
+    cursor: pointer;
 }
 
 /* Style for the actions section */
@@ -67,13 +69,12 @@ nav .actions {
 }
 
 /* Style for the action icons */
-nav .actions i {
-    margin-left: 20px; /* Add some left margin */
-    font-size: 1.8rem; /* Set the font size */
-    justify-content: space-between;
+nav .actions img {
+    height: 50px; /* Set the height of the action icons */
+    margin: 0 5px; /* Reduce the space between the icons */
     cursor: pointer;
+    opacity: 0.3s;
 }
-
 /* Style for the menu */
 .menu {
     list-style-type: none;

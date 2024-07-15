@@ -5,9 +5,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/products/',include('api.urls.product_urls')),
-    path('api/user/',include('api.urls.user_urls')),
+    path('api/products/',include('api.urls.product_urls')), # -> done ('CeateProductReview is not checked')
+    path('api/user/',include('api.urls.user_urls')), # ->checked
     path('api/orders/',include('api.urls.order_urls')),
+    path('api/cart/',include('api.urls.cart_urls')),
+    path('api/review/',include('api.urls.review_urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT) # for development only
 # still both urlpatterns needs to understand

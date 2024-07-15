@@ -2,7 +2,12 @@ import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../assets/logo.png';
- // Assuming the login component is in 'Login/Log.jsx'
+import searchIcon from '../assets/Search.png';
+// import wishlistIcon from '../assets/wish.png';
+import accountIcon from '../assets/Account.png'; // Correct the image name if there's a typo
+import cartIcon from '../assets/Cart.png';
+import LogOutIcon from '../assets/logout.png'
+// import { HiOutlineShoppingCart } from "react-icons/hi";
 
 function Navbar() {
   const [showLoginForm, setShowLoginForm] = useState(false);
@@ -19,20 +24,26 @@ function Navbar() {
         </div>
 
         <div className="search-bar">
-          <i className="fas fa-search"></i>
+        <img src={searchIcon} alt="Search Icon" />
+          {/* <i className="fas fa-search"></i> */}
           <input type="text" placeholder="What are you searching for?" />
         </div>
 
-        <div className="actions">
-          <i className="far fa-heart"></i>
-      
-          {/* <NavLink to="/Log" activeClassName="active"> <i className="far fa-user" > </i></NavLink>     */}
-          <NavLink to="#" onClick={toggleLoginForm}>
-  <i className="far fa-user"></i>
-</NavLink>
+        
 
-          <i className="fas fa-shopping-cart"></i>
+        <div className="actions">
+          {/* <img src={wishlistIcon} alt="Wishlist Icon" /> */}
+          <NavLink to="/Login">
+            <img src={accountIcon} alt="Account Icon" />
+          </NavLink>
+          <img src={cartIcon} alt="Cart Icon" />
+
+          {/* <img src={LogOutIcon} alt="Logout Icon" className='logout'/> */}
+        
+
+          {/* <HiOutlineShoppingCart /> */}
         </div>
+        <img src={LogOutIcon} alt="Logout Icon" className='logout' />
       </nav>
 
       <ul className="menu">
